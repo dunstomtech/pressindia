@@ -24,9 +24,34 @@ Press India is a next-generation hybrid platform merging verified citizen journa
 * Node.js (v18 or higher)
 * A Firebase Project configured with Authentication, Firestore, and Storage.
 
-### Installation
 
-1. **Clone the repository**
+2. **Install dependencies**
    ```bash
-   git clone [https://github.com/dunstomtech/pressindia.git](https://github.com/dunstomtech/pressindia.git)
-   cd pressindia
+   npm install
+   ```
+
+3. **Configure Environment Variables**
+   Create a `.env` file in the root directory and add your Firebase configuration keys:
+   ```env
+   VITE_FIREBASE_API_KEY=your_api_key
+   VITE_FIREBASE_AUTH_DOMAIN=your_auth_domain
+   VITE_FIREBASE_PROJECT_ID=your_project_id
+   VITE_FIREBASE_STORAGE_BUCKET=your_storage_bucket
+   VITE_FIREBASE_MESSAGING_SENDER_ID=your_sender_id
+   VITE_FIREBASE_APP_ID=your_app_id
+   ```
+
+4. **Start the Development Server**
+   ```bash
+   npm run dev
+   ```
+
+## 🔒 Security & Compliance
+
+Press India operates purely as a technology intermediary. The platform features atomic database transactions (`increment`, `arrayUnion`) to prevent race conditions and strict `firestore.rules` to ensure data integrity and prevent unauthorized modifications to user-generated content or funding amounts.
+
+## 📄 License
+
+This project is proprietary. All rights reserved by Dunstom Tech.
+```
+
