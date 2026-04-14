@@ -1,9 +1,13 @@
-import React from 'react';
-import { FaClock, FaExternalLinkAlt, FaBookmark, FaRegBookmark } from 'react-icons/fa';
+// File: src/components/news/NewsCard.jsx
+
+import React, { useState } from 'react';
+import { FaClock, FaExternalLinkAlt, FaBookmark, FaRegBookmark, FaUser } from 'react-icons/fa';
 import { formatDistanceToNow } from 'date-fns';
+import { getArticleImage } from '../../utils/thumbnailGenerator';
 
 const NewsCard = ({ article, viewMode = 'grid' }) => {
-  const [bookmarked, setBookmarked] = React.useState(false);
+  const [bookmarked, setBookmarked] = useState(false);
+  const [imageError, setImageError] = useState(false);
 
   const timeAgo = formatDistanceToNow(new Date(article.publishedAt), { addSuffix: true });
 
@@ -14,7 +18,23 @@ const NewsCard = ({ article, viewMode = 'grid' }) => {
   };
 
   const handleCardClick = () => {
-    window.open(article.source.url, '_blank', 'noopener,noreferrer');
+    if (article.isUserArticle) {
+      // Navigate to article detail page (you can implement this)
+      window.location.href = `/articles/${article.id}`;
+    } else {
+      window.open(article.url || article.source?.url, '_blank', 'noopener,noreferrer');
+    }
+  };
+
+  const getImageUrl = () => {
+    if (imageError) {
+      return getArticleImage(article);
+    }
+    return getArticleImage(article);
+  };
+
+  const handleImageError = () => {
+    setImageError(true);
   };
 
   if (viewMode === 'list') {
@@ -23,16 +43,12 @@ const NewsCard = ({ article, viewMode = 'grid' }) => {
         onClick={handleCardClick}
         className="bg-white rounded-lg shadow-sm hover:shadow-md transition cursor-pointer p-4 flex gap-4"
       >
-        {article.imageUrl && (
-          <img
-            src={article.imageUrl}
-            alt={article.title}
-            className="w-32 h-32 object-cover rounded-lg flex-shrink-0"
-            onError={(e) => {
-              e.target.src = 'https://via.placeholder.com/128x128?text=No+Image';
-            }}
-          />
-        )}
+        <img
+          src={getImageUrl()}
+          alt={article.title}
+          className="w-32 h-32 object-cover rounded-lg flex-shrink-0"
+          onError={handleImageError}
+        />
         
         <div className="flex-1 min-w-0">
           <div className="flex items-start justify-between gap-2 mb-2">
@@ -48,7 +64,7 @@ const NewsCard = ({ article, viewMode = 'grid' }) => {
           </div>
           
           <p className="text-gray-600 text-sm line-clamp-2 mb-3">
-            {article.description}
+            {article.description || article.summary}
           </p>
           
           <div className="flex items-center justify-between text-xs text-gray-500">
@@ -63,7 +79,13 @@ const NewsCard = ({ article, viewMode = 'grid' }) => {
             </div>
             
             <div className="flex items-center gap-2 text-gray-400">
-              <span className="text-[10px]">{article.source.attribution}</span>
+              {article.isUserArticle && (
+                <span className="flex items-center gap-1 text-blue-600">
+                  <FaUser size={10} />
+                  User Article
+                </span>
+              )}
+              <span className="text-[10px]">{article.source?.name || 'Press India'}</span>
               <FaExternalLinkAlt />
             </div>
           </div>
@@ -77,21 +99,24 @@ const NewsCard = ({ article, viewMode = 'grid' }) => {
       onClick={handleCardClick}
       className="bg-white rounded-lg shadow-sm hover:shadow-md transition cursor-pointer overflow-hidden flex flex-col h-full"
     >
-      {article.imageUrl && (
-        <div className="relative h-48 overflow-hidden">
-          <img
-            src={article.imageUrl}
-            alt={article.title}
-            className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
-            onError={(e) => {
-              e.target.src = 'https://via.placeholder.com/400x200?text=No+Image';
-            }}
-          />
-          <div className="absolute top-2 right-2 bg-white bg-opacity-90 backdrop-blur-sm px-2 py-1 rounded text-xs font-medium">
-            {article.category}
-          </div>
+      <div className="relative h-48 overflow-hidden">
+        <img
+          src={getImageUrl()}
+          alt={article.title}
+          className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
+          onError={handleImageError}
+        />
+        <div className="absolute top-2 right-2 bg-white bg-opacity-90 backdrop-blur-sm px-2 py-1 rounded text-xs font-medium">
+          {article.category}
         </div>
-      )}
+        
+        {article.isUserArticle && (
+          <div className="absolute top-2 left-2 bg-blue-500 text-white px-2 py-1 rounded text-xs font-medium flex items-center gap-1">
+            <FaUser size={10} />
+            User Article
+          </div>
+        )}
+      </div>
       
       <div className="p-4 flex-1 flex flex-col">
         <div className="flex items-start justify-between gap-2 mb-2">
@@ -107,7 +132,7 @@ const NewsCard = ({ article, viewMode = 'grid' }) => {
         </div>
         
         <p className="text-gray-600 text-sm line-clamp-3 mb-4 flex-1">
-          {article.description}
+          {article.description || article.summary}
         </p>
         
         <div className="flex items-center justify-between text-xs text-gray-500 pt-3 border-t">
@@ -117,7 +142,7 @@ const NewsCard = ({ article, viewMode = 'grid' }) => {
           </span>
           
           <div className="flex items-center gap-2 text-gray-400">
-            <span className="text-[10px]">{article.source.attribution}</span>
+            <span className="text-[10px]">{article.source?.name || 'Press India'}</span>
             <FaExternalLinkAlt />
           </div>
         </div>
