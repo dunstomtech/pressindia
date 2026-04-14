@@ -7,7 +7,6 @@ Press India is a next-generation hybrid platform merging verified citizen journa
 * **📰 Citizen Journalism:** A robust editor allowing users to write, submit, and publish local news reports.
 * **🗣️ Make into News (Grievance System):** A public forum where citizens can highlight civic issues, gather community upvotes, and force accountability.
 * **🤝 Verified Initiatives:** A transparent crowdfunding system for social causes, legal funds, and startups, protected by strict KYC and moderation.
-* **🌐 Multilingual Ecosystem:** Support for regional Indian languages with a feature to conceptually link translated articles to their original source.
 * **🛡️ Admin Moderation Queue:** A comprehensive super-admin dashboard for reviewing pending content, managing user roles, and ensuring platform integrity.
 * **📈 Real-Time Impact Metrics:** Live tracking of active cases and platform engagement, optimized using pseudo-Redis local caching for cost efficiency.
 
